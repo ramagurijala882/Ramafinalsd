@@ -10,15 +10,17 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                // GitHub Repository URL
-                git 'https://github.com/ramagurijala882/Ramafinalsd.git'
+                script {
+                    echo "Cloning the GitHub Repository..."
+                    git 'https://github.com/ramagurijala882/Ramafinalsd.git'
+                }
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                // Build Docker Image from the Dockerfile
                 script {
+                    echo "Building Docker Image..."
                     sh 'docker build -t $IMAGE_NAME .'
                 }
             }
@@ -26,8 +28,8 @@ pipeline {
 
         stage('Stop Old Container') {
             steps {
-                // Stop and Remove any Old Containers
                 script {
+                    echo "Stopping and Removing Old Container..."
                     sh """
                         docker stop $CONTAINER_NAME || true
                         docker rm $CONTAINER_NAME || true
@@ -38,8 +40,8 @@ pipeline {
 
         stage('Run Docker Container') {
             steps {
-                // Run the Container on the EC2 instance
                 script {
+                    echo "Running Docker Container..."
                     sh 'docker run -d -p $APP_PORT:$APP_PORT --name $CONTAINER_NAME $IMAGE_NAME'
                 }
             }
