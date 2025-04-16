@@ -10,35 +10,45 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
+                // GitHub Repository URL
                 git 'https://github.com/ramagurijala882/Ramafinalsd.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                // Build Docker Image from the Dockerfile
+                script {
+                    sh 'docker build -t $IMAGE_NAME .'
+                }
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                sh """
-                    docker stop $CONTAINER_NAME || true
-                    docker rm $CONTAINER_NAME || true
-                """
+                // Stop and Remove any Old Containers
+                script {
+                    sh """
+                        docker stop $CONTAINER_NAME || true
+                        docker rm $CONTAINER_NAME || true
+                    """
+                }
             }
         }
 
-        stage('Run Container') {
+        stage('Run Docker Container') {
             steps {
-                sh 'docker run -d -p $APP_PORT:$APP_PORT --name $CONTAINER_NAME $IMAGE_NAME'
+                // Run the Container on the EC2 instance
+                script {
+                    sh 'docker run -d -p $APP_PORT:$APP_PORT --name $CONTAINER_NAME $IMAGE_NAME'
+                }
             }
         }
     }
 
     post {
         success {
-            echo "🚀 App deployed! Access it at: http://<your-EC2-IP>:${APP_PORT}"
+            echo "🚀 App deployed! Access it at: http://<your-ec2-ip>:${APP_PORT}"
         }
         failure {
             echo "❌ Deployment failed."
