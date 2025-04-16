@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        GITHUB_TOKEN = credentials('github-personal-access-token')
         IMAGE_NAME = "healthcare-app"
         CONTAINER_NAME = "healthcare-container"
         APP_PORT = "3000"  // Exposing this on the host machine
