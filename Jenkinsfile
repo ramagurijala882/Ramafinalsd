@@ -26,6 +26,25 @@ pipeline {
             }
         }
 
+        stage('Security Compliance Check') {
+            steps {
+                script {
+                    echo "Checking for potential security risks..."
+
+                    // Check if the container is running as root (basic security check)
+                    echo "Checking for root user in the container..."
+                    sh "docker inspect ${IMAGE_NAME} | grep '\"User\": \"\"' && echo '⚠️ Container running as root!' || echo '✅ No root user found!'"
+
+                    // Run Trivy security scan (uncomment the line below if Trivy is installed on your Jenkins instance)
+                    // sh "sudo apt install -y trivy"
+                    // sh "trivy image ${IMAGE_NAME}"
+
+                    // If Trivy is not allowed or can't be installed, you can skip the scan, and manually handle later.
+                    echo "Simulated compliance check completed."
+                }
+            }
+        }
+
         stage('Stop Old Container') {
             steps {
                 script {
