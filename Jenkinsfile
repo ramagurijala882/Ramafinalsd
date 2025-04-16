@@ -12,8 +12,28 @@ pipeline {
         stage('Clone Repo') {
             steps {
                 script {
-                    echo "Cloning the GitHub Repository..."
+                    echo "📥 Cloning the GitHub Repository..."
                     git branch: 'main', url: 'https://github.com/ramagurijala882/Ramafinalsd.git'
+                }
+            }
+        }
+
+        stage('Secret Scanning with GitLeaks') {
+            steps {
+                script {
+                    echo "🔍 Running GitLeaks for secret scanning..."
+
+                    // Install GitLeaks if not already installed
+                    sh '''
+                        if ! command -v gitleaks &> /dev/null; then
+                            curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+                            chmod +x gitleaks
+                            sudo mv gitleaks /usr/local/bin/
+                        fi
+                    '''
+
+                    // Run GitLeaks scan
+                    sh "gitleaks detect --source . --report-path gitleaks-report.json || echo '⚠️ Secrets may have been found. Check report.'"
                 }
             }
         }
@@ -21,27 +41,41 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker Image..."
+                    echo "🐳 Building Docker Image..."
                     sh "docker build -t ${IMAGE_NAME} ."
                 }
             }
         }
 
-        stage('Security Compliance Check') {
+        stage('Vulnerability Scan with Trivy') {
             steps {
                 script {
-                    echo "Checking for potential security risks..."
+                    echo "🔐 Running Trivy for image vulnerability scan..."
 
-                    // Check if the container is running as root (basic security check)
+                    // Install Trivy if not already installed
+                    sh '''
+                        if ! command -v trivy &> /dev/null; then
+                            sudo apt update
+                            sudo apt install -y wget
+                            wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.51.1_Linux-64bit.deb
+                            sudo dpkg -i trivy_0.51.1_Linux-64bit.deb
+                        fi
+                    '''
+
+                    // Run Trivy image scan
+                    sh "trivy image ${IMAGE_NAME} || echo '⚠️ Vulnerabilities may exist in the image.'"
+                }
+            }
+        }
+
+        stage('Basic Security Compliance Check') {
+            steps {
+                script {
+                    echo "🛡️ Checking for basic container security compliance..."
+
+                    // Check if container runs as root
                     echo "Checking for root user in the container..."
                     sh "docker inspect ${IMAGE_NAME} | grep '\"User\": \"\"' && echo '⚠️ Container running as root!' || echo '✅ No root user found!'"
-
-                    // Run Trivy security scan (uncomment the line below if Trivy is installed on your Jenkins instance)
-                    // sh "sudo apt install -y trivy"
-                    // sh "trivy image ${IMAGE_NAME}"
-
-                    // If Trivy is not allowed or can't be installed, you can skip the scan, and manually handle later.
-                    echo "Simulated compliance check completed."
                 }
             }
         }
@@ -49,7 +83,7 @@ pipeline {
         stage('Stop Old Container') {
             steps {
                 script {
-                    echo "Stopping and Removing Old Container..."
+                    echo "🛑 Stopping and Removing Old Container..."
                     sh """
                         docker stop ${CONTAINER_NAME} || true
                         docker rm ${CONTAINER_NAME} || true
@@ -61,8 +95,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    echo "Running Docker Container..."
-                    // Map port 80 from the container to port 3000 on the host
+                    echo "🚀 Running Docker Container..."
                     sh "docker run -d -p ${APP_PORT}:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}"
                 }
             }
@@ -71,10 +104,10 @@ pipeline {
 
     post {
         success {
-            echo "🚀 App deployed! Access it at: http://<your-ec2-ip>:${APP_PORT}"
+            echo "✅ Deployment successful! Visit: http://<your-ec2-ip>:${APP_PORT}"
         }
         failure {
-            echo "❌ Deployment failed."
+            echo "❌ Deployment failed. Check logs and scan reports."
         }
     }
 }
