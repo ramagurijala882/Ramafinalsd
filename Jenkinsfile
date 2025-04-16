@@ -54,7 +54,7 @@ pipeline {
 
                     // Check if Trivy is installed
                     sh '''
-                        if ! command -v trivy &> /dev/null; then
+                        if ! which trivy &> /dev/null; then
                             echo "❌ Trivy is not installed on this machine. Please install it before running the pipeline."
                             exit 1
                         fi
