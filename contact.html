@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us - Healthcare App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #007acc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      background: #005b99;
+      text-align: center;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+    main {
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+    }
+    form {
+      background-color: #f3f3f3;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    label, input, textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    input, textarea {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007acc;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    footer {
+      background-color: #007acc;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Contact Us</h1>
+    <p>We are here to assist you</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <main>
+    <form>
+      <label for="name">Name:</label>
+      <input type="text" id="name" placeholder="Your name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="Your email" required>
+
+      <label for="message">Message:</label>
+      <textarea id="message" rows="5" placeholder="Your message"></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </main>
+
+  <footer>
+    &copy; 2025 Healthcare Organization
+  </footer>
+
+</body>
+</html>
