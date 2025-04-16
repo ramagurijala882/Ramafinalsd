@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "healthcare-app"
         CONTAINER_NAME = "healthcare-container"
-        APP_PORT = "3000"
+        APP_PORT = "3000"  // Exposing this on the host machine
     }
 
     stages {
@@ -12,7 +12,6 @@ pipeline {
             steps {
                 script {
                     echo "Cloning the GitHub Repository..."
-                    // Explicitly define the branch to pull from
                     git branch: 'main', url: 'https://github.com/ramagurijala882/Ramafinalsd.git'
                 }
             }
@@ -22,7 +21,6 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker Image..."
-                    // Ensure that the image name is expanded correctly
                     sh "docker build -t ${IMAGE_NAME} ."
                 }
             }
@@ -44,7 +42,8 @@ pipeline {
             steps {
                 script {
                     echo "Running Docker Container..."
-                    sh "docker run -d -p ${APP_PORT}:${APP_PORT} --name ${CONTAINER_NAME} ${IMAGE_NAME}"
+                    // Map port 80 from the container to port 3000 on the host
+                    sh "docker run -d -p ${APP_PORT}:80 --name ${CONTAINER_NAME} ${IMAGE_NAME}"
                 }
             }
         }
