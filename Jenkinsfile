@@ -57,7 +57,7 @@ pipeline {
                         if ! command -v trivy &> /dev/null; then
                             sudo apt update
                             sudo apt install -y wget
-                            wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.51.1_Linux-64bit.deb
+                            wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.61.0_Linux-64bit.deb
                             sudo dpkg -i trivy_0.51.1_Linux-64bit.deb
                         fi
                     '''
