@@ -52,7 +52,7 @@ pipeline {
                 script {
                     echo "🔐 Running Trivy for image vulnerability scan..."
 
-                    // Use existing Trivy installation
+                    // Check if Trivy is installed
                     sh '''
                         if ! command -v trivy &> /dev/null; then
                             echo "❌ Trivy is not installed on this machine. Please install it before running the pipeline."
