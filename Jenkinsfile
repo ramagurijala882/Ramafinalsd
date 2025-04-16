@@ -52,13 +52,11 @@ pipeline {
                 script {
                     echo "🔐 Running Trivy for image vulnerability scan..."
 
-                    // Install Trivy if not already installed
+                    // Use already-installed Trivy
                     sh '''
                         if ! command -v trivy &> /dev/null; then
-                            sudo apt update
-                            sudo apt install -y wget
-                            wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.61.0_Linux-64bit.deb
-                            sudo dpkg -i trivy_0.51.1_Linux-64bit.deb
+                            echo "❌ Trivy is not installed. Please install it manually on the EC2 instance."
+                            exit 1
                         fi
                     '''
 
