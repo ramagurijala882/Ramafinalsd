@@ -7,8 +7,7 @@ WORKDIR /usr/share/nginx/html
 # Copy your HTML, CSS, and any other static files into the container
 COPY . .
 
-# Expose port 80 to allow external access to the server
-EXPOSE 3000
+# Expose port 80 (the port Nginx serves on)
+EXPOSE 80
 
-# The default command for Nginx is already set to start the server
-# So no need to define a CMD unless you want to customize it
+# Nginx will automatically start and serve your content
