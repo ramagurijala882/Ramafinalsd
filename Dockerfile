@@ -8,7 +8,7 @@ WORKDIR /usr/share/nginx/html
 COPY . .
 
 # Expose port 80 to allow external access to the server
-EXPOSE 80
+EXPOSE 3000
 
 # The default command for Nginx is already set to start the server
 # So no need to define a CMD unless you want to customize it
